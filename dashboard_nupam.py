@@ -18,7 +18,8 @@ from keras.layers import Dense
 # Carregar variáveis de ambiente
 load_dotenv()
 TOKEN = os.getenv("GITHUB_TOKEN")
-REPO_URL = "https://api.github.com/repos/Kodjaoglanian/Ceippam-Sinova/contents/processos.csv"
+REPO_URL = os.getenv("GITHUB_URL")
+REPO_URL2 = os.getenv("GITHUB_URL2")
 
 # Função para baixar o arquivo CSV do GitHub e remover colunas 'Unnamed'
 def download_csv(token, url):
@@ -224,14 +225,18 @@ if aba == "Resumo":
     - **Gráfico de barras:** Mostra a distribuição temporal dos processos, com o total de processos em cada mês.
     """)
 
-    # Tabela de peças
-    st.subheader("Tabela de Peças Elaboradas")
-    st.dataframe(pecas)
-    st.markdown("""
-    **Explicação:**
-    - **Tabela de peças:** Lista os tipos de peças elaboradas e a quantidade de cada tipo.
-    """)
+    # Mostrar o arquivo contagem_pecas.csv do GitHub
+    st.subheader("Contagem de peças normalizadas")
 
+    # URL do arquivo contagem_pecas.csv
+    PECA_URL = (REPO_URL2)
+
+    # Baixar e carregar o CSV contagem_pecas.csv
+    df_pecas = download_csv(TOKEN, PECA_URL)
+
+    # Exibir o DataFrame
+    st.dataframe(df_pecas)
+    st.markdown("Contagem de peças normalizadas utilizando Fuzzy Matching com a integração dos dados de outro script desenvolvido externamente")
 # Análises de IA
 if aba == "Análises de IA":
     st.subheader("Análises de IA e Aprendizado de Máquina")
