@@ -1,0 +1,11 @@
+streamlit
+pandas
+requests
+plotly
+numpy
+scikit-learn
+statsmodels
+python-dotenv
+matplotlib
+tensorflow
+keras
