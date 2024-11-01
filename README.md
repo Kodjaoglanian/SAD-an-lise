@@ -1,3 +1,4 @@
+SAD-Sistema de Análise de Dados
 # Dashboard de Monitoramento de Processos do NUPAM
 
 Este repositório apresenta uma aplicação em **Streamlit** voltada para o monitoramento e análise de processos do **NUPAM** no ano de 2024. A aplicação oferece uma visão abrangente do desempenho e da gestão de processos, além de realizar análises preditivas com aprendizado de máquina. 
