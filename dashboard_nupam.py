@@ -71,17 +71,14 @@ df_valid = df[valid_columns]
 # Total de dados
 total_dados = df_valid.shape[0]
 
-# Filtra procedimentos não em branco
-df_filtered = df_2024[df_2024['PEÇAS ELABORADAS'].astype(bool)]
+# Contagem de dados faltantes (valores NaN em qualquer coluna)
+dados_faltantes = df_valid.isnull().sum().sum()
 
-# Contagem de dados faltantes (valores NaN em qualquer coluna) excluindo procedimentos em branco
-dados_faltantes = df_filtered.isnull().sum().sum()
+# Contagem de dados incorretos (NaN na coluna 'Duração')
+dados_incorretos = df_2024['Duração'].isnull().sum()
 
-# Contagem de dados incorretos (NaN na coluna 'Duração') excluindo procedimentos em branco
-dados_incorretos = df_filtered['Duração'].isnull().sum()
-
-# Total de dados válidos: apenas contagem de linhas onde Duração não é NaN excluindo procedimentos em branco
-dados_validos = df_filtered[df_filtered['Duração'].notnull()]
+# Total de dados válidos: apenas contagem de linhas onde Duração não é NaN
+dados_validos = df_2024[df_2024['Duração'].notnull()]
 total_validos = dados_validos.shape[0]
 
 # Exatidão percentual
