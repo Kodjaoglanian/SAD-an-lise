@@ -126,31 +126,6 @@ df_2024.loc[:, 'Duração'] = (df_2024['Data remessa'] - df_2024['Data de entrad
 # Handle missing values in 'Duração'
 df_2024 = df_2024.dropna(subset=['Duração'])
 
-# Filtra procedimentos não em branco
-df_filtered = df_2024[df_2024['PEÇAS ELABORADAS'].astype(bool)]
-
-# Filtrar colunas que não estão totalmente em branco, garantindo que 'Duração' seja mantida
-valid_columns = df_filtered.columns[df_filtered.notna().any()]
-if 'Duração' not in valid_columns:
-    valid_columns = valid_columns.tolist() + ['Duração']
-df_valid = df_filtered[valid_columns]
-
-# Total de dados (excluindo procedimentos em branco)
-total_dados = df_valid.shape[0]
-
-# Contagem de dados faltantes (valores NaN em qualquer coluna) excluindo procedimentos em branco
-dados_faltantes = df_valid.isnull().sum().sum()
-
-# Contagem de dados incorretos (NaN na coluna 'Duração') excluindo procedimentos em branco
-dados_incorretos = df_valid['Duração'].isnull().sum()
-
-# Total de dados válidos: apenas contagem de linhas onde Duração não é NaN excluindo procedimentos em branco
-dados_validos = df_valid[df_valid['Duração'].notnull()]
-total_validos = dados_validos.shape[0]
-
-# Exatidão percentual
-exatidao_percentual = (total_validos / total_dados) * 100 if total_dados > 0 else 0
-
 # Dashboard
 st.title("Dashboard NUPAM 2024")
 
