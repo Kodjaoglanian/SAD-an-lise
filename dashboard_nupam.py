@@ -115,6 +115,7 @@ processos_por_mes_sorted = processos_por_mes.sort_values('Mês_Num')
 # Análise de peças
 pecas = df_2024.explode('PEÇAS ELABORADAS').groupby('PEÇAS ELABORADAS')['QNTD'].sum().reset_index()
 pecas = pecas.rename(columns={'PEÇAS ELABORADAS': 'Tipo de Peça', 'QNTD': 'Quantidade'})
+pecas = pecas.rename(columns={'PEÇAS ELABORADAS': 'Tipo de Peça'})
 total_pecas = pecas['Quantidade'].sum()
 total_tipos_pecas = pecas.shape[0]
 total_tipos_pecas = pecas.shape[0]
@@ -283,7 +284,7 @@ if aba == "Análises de IA":
     plt.scatter(X, y, color='blue', label='Dados')
     plt.plot(X, y_pred, color='red', label='Linha de Tendência')
     plt.title('Tendência da Duração dos Processos')
-    plt.xlabel('Índice dos-Processos')
+    plt.xlabel('Índice dos Processos')
     plt.ylabel('Duração (dias)')
     plt.legend()
     st.pyplot(plt)
@@ -306,6 +307,7 @@ if aba == "Análises de IA":
     plt.title('Clusters da Duração dos Processos')
     plt.xlabel('Duração (dias)')
     plt.ylabel('Cluster')
+    plt.legend()
     st.pyplot(plt)
 
     # Previsão de Séries Temporais com ARIMA
@@ -358,15 +360,5 @@ if aba == "Análises de IA":
     plt.title('Previsão da Duração dos Processos com Redes Neurais')
     plt.xlabel('Índice dos Processos (normalizado)')
     plt.ylabel('Duração (normalizado)')
-    plt.legend()
-    st.pyplot(plt)
-
-    plt.legend()
-    st.pyplot(plt)
-
-
-    plt.legend()
-    st.pyplot(plt)
-
     plt.legend()
     st.pyplot(plt)
