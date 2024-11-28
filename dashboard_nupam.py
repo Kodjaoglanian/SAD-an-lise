@@ -14,7 +14,6 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from keras.layers import Dense
-import calendar
 
 # Carregar variáveis de ambiente
 load_dotenv()
@@ -107,10 +106,6 @@ processos_por_cidade_full = processos_por_cidade_full.sort_values('Total de Proc
 # Processos por mês
 processos_por_mes = df_2024['Data de entrada'].dt.month_name().value_counts().reset_index()
 processos_por_mes.columns = ['Mês', 'Total de Processos']
-
-# Ordenar processos_por_mes pela ordem dos meses
-processos_por_mes['Mês_Num'] = processos_por_mes['Mês'].apply(lambda x: list(calendar.month_name).index(x))
-processos_por_mes_sorted = processos_por_mes.sort_values('Mês_Num')
 
 # Análise de peças
 pecas = df_2024.explode('PEÇAS ELABORADAS').groupby('PEÇAS ELABORADAS')['QNTD'].sum().reset_index()
@@ -240,21 +235,16 @@ if aba == "Resumo":
 
     # Gráfico: Processos por Mês interativo
     st.subheader("Gráfico de Processos por Mês")
-    fig2 = px.bar(processos_por_mes_sorted, x='Mês', y='Total de Processos', title="Total de Processos por Mês",
+    fig2 = px.bar(processos_por_mes, x='Mês', y='Total de Processos', title="Total de Processos por Mês",
                   color='Total de Processos', color_continuous_scale='Reds')
     st.plotly_chart(fig2)
     st.markdown("""
     **Explicação:**
     - **Gráfico de barras:** Mostra a distribuição temporal dos processos, com o total de processos em cada mês.
     """)
-    
-    # Tabela: Processos por Mês ordenada
-    st.subheader("Tabela de Processos por Mês")
-    st.table(processos_por_mes_sorted[['Mês', 'Total de Processos']])
 
     # Tabela de peças
     st.subheader("Tabela de Peças Elaboradas")
-    pecas = pecas.sort_values(by='Quantidade', ascending=False)
     st.dataframe(pecas)
     st.markdown("""
     **Explicação:**
