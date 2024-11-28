@@ -43,9 +43,9 @@ df = download_csv(TOKEN, REPO_URL)
 # Função para separar os tipos de peças, garantindo que só strings sejam processadas
 def separar_pecas(pecas_str):
     if isinstance(pecas_str, str):
-        return pecas_str.split(' + ')
+        return [peca.strip().lower() for peca in pecas_str.split(' + ')]
     else:
-        return [pecas_str] if pd.notna(pecas_str) else []
+        return [pecas_str.lower()] if pd.notna(pecas_str) else []
 
 # Aplicar a função para separar as peças
 df['PEÇAS ELABORADAS'] = df['PEÇAS ELABORADAS'].apply(separar_pecas)
@@ -358,5 +358,8 @@ if aba == "Análises de IA":
     plt.title('Previsão da Duração dos Processos com Redes Neurais')
     plt.xlabel('Índice dos Processos (normalizado)')
     plt.ylabel('Duração (normalizado)')
+    plt.legend()
+    st.pyplot(plt)
+
     plt.legend()
     st.pyplot(plt)
