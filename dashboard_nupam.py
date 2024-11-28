@@ -113,11 +113,15 @@ processos_por_mes['Mês_Num'] = processos_por_mes['Mês'].apply(lambda x: list(c
 processos_por_mes_sorted = processos_por_mes.sort_values('Mês_Num')
 
 # Análise de peças
-pecas = df_2024.explode('PEÇAS ELABORADAS').drop_duplicates()
+pecas = df_2024.explode('PEÇAS ELABORADAS')
 pecas = pecas.groupby('PEÇAS ELABORADAS').size().reset_index(name='Quantidade')
 pecas = pecas.rename(columns={'PEÇAS ELABORADAS': 'Tipo de Peça'})
 total_pecas = pecas['Quantidade'].sum()
 total_tipos_pecas = pecas.shape[0]
+
+# Logs para diagnóstico
+st.write(f"Total de peças contadas: {total_pecas}")
+st.write(f"Total de tipos de peças: {total_tipos_pecas}")
 
 # Ensure the 'PEÇAS ELABORADAS' column remains as lists and remove incorrect conversion to numeric
 # Remove or comment out the following lines:
@@ -356,6 +360,12 @@ if aba == "Análises de IA":
     plt.figure(figsize=(10, 5))
     plt.scatter(X_nn, y_nn, color='blue', label='Dados')
     plt.plot(X_nn, y_pred_nn, color='red', label='Previsões da Rede Neural')
+    plt.title('Previsão da Duração dos Processos com Redes Neurais')
+    plt.plot(X_nn, y_pred_nn, color='red', label='Previsões da Rede Neural')
+    plt.xlabel('Índice dos Processos (normalizado)')
+    plt.ylabel('Duração (normalizado)')
+    plt.legend()
+    st.pyplot(plt)
     plt.title('Previsão da Duração dos Processos com Redes Neurais')
     plt.xlabel('Índice dos Processos (normalizado)')
     plt.ylabel('Duração (normalizado)')
