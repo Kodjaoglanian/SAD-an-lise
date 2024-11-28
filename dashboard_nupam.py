@@ -113,11 +113,10 @@ processos_por_mes['Mês_Num'] = processos_por_mes['Mês'].apply(lambda x: list(c
 processos_por_mes_sorted = processos_por_mes.sort_values('Mês_Num')
 
 # Análise de peças
-pecas = df_2024.explode('PEÇAS ELABORADAS').groupby('PEÇAS ELABORADAS')['QNTD'].sum().reset_index()
-pecas = pecas.rename(columns={'PEÇAS ELABORADAS': 'Tipo de Peça', 'QNTD': 'Quantidade'})
+pecas = df_2024.explode('PEÇAS ELABORADAS').drop_duplicates()
+pecas = pecas.groupby('PEÇAS ELABORADAS').size().reset_index(name='Quantidade')
 pecas = pecas.rename(columns={'PEÇAS ELABORADAS': 'Tipo de Peça'})
 total_pecas = pecas['Quantidade'].sum()
-total_tipos_pecas = pecas.shape[0]
 total_tipos_pecas = pecas.shape[0]
 
 # Ensure the 'PEÇAS ELABORADAS' column remains as lists and remove incorrect conversion to numeric
