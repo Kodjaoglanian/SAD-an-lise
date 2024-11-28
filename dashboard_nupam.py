@@ -43,9 +43,9 @@ df = download_csv(TOKEN, REPO_URL)
 # Função para separar os tipos de peças, garantindo que só strings sejam processadas
 def separar_pecas(pecas_str):
     if isinstance(pecas_str, str):
-        return [peca.strip().lower() for peca in pecas_str.split(' + ')]
+        return pecas_str.split(' + ')
     else:
-        return [pecas_str.lower()] if pd.notna(pecas_str) else []
+        return [pecas_str] if pd.notna(pecas_str) else []
 
 # Aplicar a função para separar as peças
 df['PEÇAS ELABORADAS'] = df['PEÇAS ELABORADAS'].apply(separar_pecas)
@@ -113,15 +113,10 @@ processos_por_mes['Mês_Num'] = processos_por_mes['Mês'].apply(lambda x: list(c
 processos_por_mes_sorted = processos_por_mes.sort_values('Mês_Num')
 
 # Análise de peças
-pecas = df_2024.explode('PEÇAS ELABORADAS')
-pecas = pecas.groupby('PEÇAS ELABORADAS').size().reset_index(name='Quantidade')
-pecas = pecas.rename(columns={'PEÇAS ELABORADAS': 'Tipo de Peça'})
+pecas = df_2024.explode('PEÇAS ELABORADAS').groupby('PEÇAS ELABORADAS')['QNTD'].sum().reset_index()
+pecas = pecas.rename(columns={'PEÇAS ELABORADAS': 'Tipo de Peça', 'QNTD': 'Quantidade'})
 total_pecas = pecas['Quantidade'].sum()
 total_tipos_pecas = pecas.shape[0]
-
-# Logs para diagnóstico
-st.write(f"Total de peças contadas: {total_pecas}")
-st.write(f"Total de tipos de peças: {total_tipos_pecas}")
 
 # Ensure the 'PEÇAS ELABORADAS' column remains as lists and remove incorrect conversion to numeric
 # Remove or comment out the following lines:
@@ -133,6 +128,7 @@ st.write(f"Total de tipos de peças: {total_tipos_pecas}")
 # Filtra procedimentos não em branco com listas não vazias em 'PEÇAS ELABORADAS'
 df_filtered = df_2024[df_2024['PEÇAS ELABORADAS'].apply(lambda x: isinstance(x, list) and len(x) > 0)]
 
+# Filtrar colunas que não estão totalmente em branco, garantindo que 'Duração' seja mantida
 valid_columns = df_filtered.columns[df_filtered.notna().any()]
 if 'Duração' not in valid_columns:
     valid_columns = valid_columns.tolist() + ['Duração']
@@ -287,7 +283,7 @@ if aba == "Análises de IA":
     plt.scatter(X, y, color='blue', label='Dados')
     plt.plot(X, y_pred, color='red', label='Linha de Tendência')
     plt.title('Tendência da Duração dos Processos')
-    plt.xlabel('Índice dos Processos')
+    plt.xlabel('Índice dos-Processos')
     plt.ylabel('Duração (dias)')
     plt.legend()
     st.pyplot(plt)
@@ -310,7 +306,6 @@ if aba == "Análises de IA":
     plt.title('Clusters da Duração dos Processos')
     plt.xlabel('Duração (dias)')
     plt.ylabel('Cluster')
-    plt.legend()
     st.pyplot(plt)
 
     # Previsão de Séries Temporais com ARIMA
@@ -360,12 +355,6 @@ if aba == "Análises de IA":
     plt.figure(figsize=(10, 5))
     plt.scatter(X_nn, y_nn, color='blue', label='Dados')
     plt.plot(X_nn, y_pred_nn, color='red', label='Previsões da Rede Neural')
-    plt.title('Previsão da Duração dos Processos com Redes Neurais')
-    plt.plot(X_nn, y_pred_nn, color='red', label='Previsões da Rede Neural')
-    plt.xlabel('Índice dos Processos (normalizado)')
-    plt.ylabel('Duração (normalizado)')
-    plt.legend()
-    st.pyplot(plt)
     plt.title('Previsão da Duração dos Processos com Redes Neurais')
     plt.xlabel('Índice dos Processos (normalizado)')
     plt.ylabel('Duração (normalizado)')
