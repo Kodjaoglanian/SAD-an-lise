@@ -266,11 +266,6 @@ if aba == "Resumo":
     **Explicação:**
     - **Tabela de peças:** Lista os tipos de peças elaboradas e a quantidade de cada tipo.
     """)
-
-    # Verificar a contagem específica da peça "despacho de análise pós prazo resposta"
-    contagem_despacho = df_2024[df_2024['PEÇAS ELABORADAS'].apply(lambda x: 'despacho de análise pós prazo resposta' in x)]
-    st.write(f"Contagem de 'despacho de análise pós prazo resposta': **{contagem_despacho.shape[0]}**")
-
 # Análises de IA
 if aba == "Análises de IA":
     st.subheader("Análises de IA e Aprendizado de Máquina")
