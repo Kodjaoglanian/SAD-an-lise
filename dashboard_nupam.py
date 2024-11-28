@@ -113,18 +113,37 @@ pecas = pecas.rename(columns={'PEÇAS ELABORADAS': 'Tipo de Peça', 'QNTD': 'Qua
 total_pecas = pecas['Quantidade'].sum()
 total_tipos_pecas = pecas.shape[0]
 
-# Ensure the 'PEÇAS ELABORADAS' column is numeric
-df_2024.loc[:, 'PEÇAS ELABORADAS'] = pd.to_numeric(df_2024['PEÇAS ELABORADAS'], errors='coerce').fillna(0)
+# Ensure the 'PEÇAS ELABORADAS' column remains as lists and remove incorrect conversion to numeric
+# Remove or comment out the following lines:
+# df_2024.loc[:, 'PEÇAS ELABORADAS'] = pd.to_numeric(df_2024['PEÇAS ELABORADAS'], errors='coerce').fillna(0)
 
-# Ensure the 'Data de entrada' and 'Data remessa' columns are in datetime format
-df_2024.loc[:, 'Data de entrada'] = pd.to_datetime(df_2024['Data de entrada'], errors='coerce')
-df_2024.loc[:, 'Data remessa'] = pd.to_datetime(df_2024['Data remessa'], errors='coerce')
+# Remove duplicate calculations of 'Duração' and datetime conversion if any
+# ...existing code...
 
-# Calculate the 'Duração' column
-df_2024.loc[:, 'Duração'] = (df_2024['Data remessa'] - df_2024['Data de entrada']).dt.days
+# Filtra procedimentos não em branco com listas não vazias em 'PEÇAS ELABORADAS'
+df_filtered = df_2024[df_2024['PEÇAS ELABORADAS'].apply(lambda x: isinstance(x, list) and len(x) > 0)]
 
-# Handle missing values in 'Duração'
-df_2024 = df_2024.dropna(subset=['Duração'])
+# Filtrar colunas que não estão totalmente em branco, garantindo que 'Duração' seja mantida
+valid_columns = df_filtered.columns[df_filtered.notna().any()]
+if 'Duração' not in valid_columns:
+    valid_columns = valid_columns.tolist() + ['Duração']
+df_valid = df_filtered[valid_columns]
+
+# Total de dados (excluindo procedimentos em branco)
+total_dados = df_valid.shape[0]
+
+# Contagem de dados faltantes (valores NaN em qualquer coluna) excluindo procedimentos em branco
+dados_faltantes = df_valid.isnull().sum().sum()
+
+# Contagem de dados incorretos (NaN na coluna 'Duração') excluindo procedimentos em branco
+dados_incorretos = df_valid['Duração'].isnull().sum()
+
+# Total de dados válidos: apenas contagem de linhas onde Duração não é NaN excluindo procedimentos em branco
+dados_validos = df_valid[df_valid['Duração'].notnull()]
+total_validos = dados_validos.shape[0]
+
+# Exatidão percentual
+exatidao_percentual = (total_validos / total_dados) * 100 if total_dados > 0 else 0
 
 # Dashboard
 st.title("Dashboard NUPAM 2024")
