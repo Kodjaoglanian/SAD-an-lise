@@ -123,18 +123,11 @@ total_tipos_pecas = pecas.shape[0]
 # Filtra procedimentos não em branco com listas não vazias em 'PEÇAS ELABORADAS'
 df_filtered = df_2024[df_2024['PEÇAS ELABORADAS'].apply(lambda x: isinstance(x, list) and len(x) > 0)]
 
-# Filtrar colunas que não estão totalmente em branco e com menos de 50% de dados faltantes
-threshold = 0.5 * len(df_filtered)
-valid_columns = df_filtered.columns[df_filtered.isnull().sum() < threshold]
+# Filtrar colunas que não estão totalmente em branco, garantindo que 'Duração' seja mantida
+valid_columns = df_filtered.columns[df_filtered.notna().any()]
 if 'Duração' not in valid_columns:
     valid_columns = valid_columns.tolist() + ['Duração']
 df_valid = df_filtered[valid_columns]
-
-# Resumo de dados faltantes por coluna
-st.subheader("Resumo de Dados Faltantes por Coluna")
-missing_data = df_valid.isnull().sum().reset_index()
-missing_data.columns = ['Coluna', 'Dados Faltantes']
-st.table(missing_data)
 
 # Total de dados (excluindo procedimentos em branco)
 total_dados = df_valid.shape[0]
