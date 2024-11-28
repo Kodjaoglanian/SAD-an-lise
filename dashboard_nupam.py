@@ -117,6 +117,7 @@ pecas = df_2024.explode('PEÇAS ELABORADAS').groupby('PEÇAS ELABORADAS')['QNTD'
 pecas = pecas.rename(columns={'PEÇAS ELABORADAS': 'Tipo de Peça', 'QNTD': 'Quantidade'})
 total_pecas = pecas['Quantidade'].sum()
 total_tipos_pecas = pecas.shape[0]
+total_tipos_pecas = pecas.shape[0]
 
 # Ensure the 'PEÇAS ELABORADAS' column remains as lists and remove incorrect conversion to numeric
 # Remove or comment out the following lines:
@@ -128,7 +129,6 @@ total_tipos_pecas = pecas.shape[0]
 # Filtra procedimentos não em branco com listas não vazias em 'PEÇAS ELABORADAS'
 df_filtered = df_2024[df_2024['PEÇAS ELABORADAS'].apply(lambda x: isinstance(x, list) and len(x) > 0)]
 
-# Filtrar colunas que não estão totalmente em branco, garantindo que 'Duração' seja mantida
 valid_columns = df_filtered.columns[df_filtered.notna().any()]
 if 'Duração' not in valid_columns:
     valid_columns = valid_columns.tolist() + ['Duração']
@@ -358,6 +358,13 @@ if aba == "Análises de IA":
     plt.title('Previsão da Duração dos Processos com Redes Neurais')
     plt.xlabel('Índice dos Processos (normalizado)')
     plt.ylabel('Duração (normalizado)')
+    plt.legend()
+    st.pyplot(plt)
+
+    plt.legend()
+    st.pyplot(plt)
+
+
     plt.legend()
     st.pyplot(plt)
 
