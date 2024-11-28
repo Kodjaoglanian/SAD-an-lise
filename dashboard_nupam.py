@@ -245,6 +245,7 @@ if aba == "Resumo":
 
     # Tabela de peças
     st.subheader("Tabela de Peças Elaboradas")
+    pecas = pecas.sort_values(by='Quantidade', ascending=False)
     st.dataframe(pecas)
     st.markdown("""
     **Explicação:**
