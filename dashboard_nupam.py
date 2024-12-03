@@ -277,8 +277,15 @@ if aba == "Análises de IA":
     - **Regressão Linear:** Modelo que tenta encontrar uma relação linear entre o índice dos processos e a duração.
     - **Linha de Tendência:** Representa a tendência geral dos dados.
     """)
-    X = np.array(range(len(df_2024))).reshape(-1, 1)
-    y = df_2024['Duração'].values
+    
+    # Filtrar dados com 'Duração' não nula antes da regressão
+    df_regression = df_2024.dropna(subset=['Duração'])
+
+    # Redefinir X e y usando os dados filtrados
+    X = np.array(range(len(df_regression))).reshape(-1, 1)
+    y = df_regression['Duração'].values
+
+    # Regressão Linear
     model = LinearRegression()
     model.fit(X, y)
     y_pred = model.predict(X)
