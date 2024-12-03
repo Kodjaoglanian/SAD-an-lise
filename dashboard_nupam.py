@@ -307,8 +307,17 @@ if aba == "Análises de IA":
     - **KMeans:** Algoritmo de clustering que agrupa os dados em clusters com base na duração.
     - **Clusters Identificados:** Mostra os clusters formados e a duração média em cada cluster.
     """)
+    
+    # Filtrar dados com 'Duração' não nula antes do clustering
+    df_kmeans = df_2024.dropna(subset=['Duração'])
+
+    # Aplicar KMeans nos dados filtrados
     kmeans = KMeans(n_clusters=3)
-    df_2024['Cluster'] = kmeans.fit_predict(df_2024[['Duração']])
+    df_kmeans['Cluster'] = kmeans.fit_predict(df_kmeans[['Duração']])
+
+    # Atualizar df_2024 com os clusters
+    df_2024.loc[df_kmeans.index, 'Cluster'] = df_kmeans['Cluster']
+
     st.write("Clusters Identificados:")
     st.dataframe(df_2024[['Duração', 'Cluster']])
 
