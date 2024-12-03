@@ -349,35 +349,43 @@ if aba == "Análises de IA":
     - **Redes Neurais:** Modelo de aprendizado de máquina que prevê a duração dos processos com base nos dados históricos.
     - **Previsões:** Mostra as previsões da duração dos processos usando a rede neural.
     """)
-    # Prepare data for neural network
-    X_nn = np.array(range(len(df_2024))).reshape(-1, 1)
-    y_nn = df_2024['Duração'].values
 
-    # Normalize data
-    X_nn = X_nn / np.max(X_nn)
-    y_nn = y_nn / np.max(y_nn)
+    # Filtrar dados com 'Duração' não nula antes da rede neural
+    df_nn = df_2024.dropna(subset=['Duração'])
 
-    # Define the neural network model
-    model_nn = Sequential()
-    model_nn.add(Dense(64, input_dim=1, activation='relu'))
-    model_nn.add(Dense(32, activation='relu'))
-    model_nn.add(Dense(1, activation='linear'))
+    # Verificar se há dados suficientes
+    if len(df_nn) > 1:
+        # Prepare data for neural network
+        X_nn = np.array(range(len(df_nn))).reshape(-1, 1)
+        y_nn = df_nn['Duração'].values
 
-    # Compile the model
-    model_nn.compile(optimizer='adam', loss='mean_squared_error')
+        # Normalize data
+        X_nn = X_nn / np.max(X_nn)
+        y_nn = y_nn / np.max(y_nn)
 
-    # Train the model
-    model_nn.fit(X_nn, y_nn, epochs=100, verbose=0)
+        # Define the neural network model
+        model_nn = Sequential()
+        model_nn.add(Dense(64, input_dim=1, activation='relu'))
+        model_nn.add(Dense(32, activation='relu'))
+        model_nn.add(Dense(1, activation='linear'))
 
-    # Make predictions
-    y_pred_nn = model_nn.predict(X_nn)
+        # Compile the model
+        model_nn.compile(optimizer='adam', loss='mean_squared_error')
 
-    # Plot the neural network predictions
-    plt.figure(figsize=(10, 5))
-    plt.scatter(X_nn, y_nn, color='blue', label='Dados')
-    plt.plot(X_nn, y_pred_nn, color='red', label='Previsões da Rede Neural')
-    plt.title('Previsão da Duração dos Processos com Redes Neurais')
-    plt.xlabel('Índice dos Processos (normalizado)')
-    plt.ylabel('Duração (normalizado)')
-    plt.legend()
-    st.pyplot(plt)
+        # Train the model
+        model_nn.fit(X_nn, y_nn, epochs=100, verbose=0)
+
+        # Make predictions
+        y_pred_nn = model_nn.predict(X_nn)
+
+        # Plot the neural network predictions
+        plt.figure(figsize=(10, 5))
+        plt.scatter(X_nn, y_nn, color='blue', label='Dados')
+        plt.plot(X_nn, y_pred_nn, color='red', label='Previsões da Rede Neural')
+        plt.title('Previsão da Duração dos Processos com Redes Neurais')
+        plt.xlabel('Índice dos Processos (normalizado)')
+        plt.ylabel('Duração (normalizado)')
+        plt.legend()
+        st.pyplot(plt)
+    else:
+        st.write("Dados insuficientes para treinar a rede neural.")
